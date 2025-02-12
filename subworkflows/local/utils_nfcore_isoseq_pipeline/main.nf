@@ -87,6 +87,13 @@ workflow PIPELINE_INITIALISATION {
             .set { ch_samplesheet }
     }
 
+    if (params.entrypoint == "refine") {
+        Channel
+            .fromSamplesheet("input")
+            .flatMap { create_refine_channel(it) }
+            .set { ch_samplesheet }
+    }
+
     if (params.entrypoint == "map") {
         Channel
             .fromSamplesheet("input")
@@ -286,6 +293,22 @@ def create_pbccs_channel(row, chunk) {
 
     return array
 }
+
+// Function to get to create samplesheet channel for refine entrypoint [ meta, bam, pbi ]
+// No chunking
+def create_refine_channel(row) {
+
+    if (!file(row[1]).exists()) {
+        exit 1, "ERROR: Please check input samplesheet -> BAM file does not exist!\n${row[1]}"
+    }
+
+    if (!file(row[2]).exists()) {
+        exit 1, "ERROR: Please check input samplesheet -> PBI file does not exist!\n${row[2]}"
+    }
+
+    return [ [ row[0], file(row[1]) ] ]
+}
+
 
 // Function to get to create samplesheet channel for map entrypoint [ meta, reads ]
 def create_reads_channel(row) {

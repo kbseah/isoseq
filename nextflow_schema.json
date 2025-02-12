@@ -45,7 +45,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-dungeon",
                     "description": "Run complete pipeline or TAMA only?",
-                    "enum": ["isoseq", "map"],
+                    "enum": ["isoseq", "map", "refine"],
                     "default": "isoseq",
                     "help_text": "If you don't have the subreads sequences, because of the provider or last PacBio sequencer or because you used Oxford Nanopore, you'll to run the pipeline from the mapping step to advantage of the TAMA processing. \nThis option allows you to change the entry point from subread (--entrypoint isoseq) processing to mapping (--entrypoint map). "
                 },

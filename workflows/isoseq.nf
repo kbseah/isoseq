@@ -121,8 +121,18 @@ workflow ISOSEQ {
     }
 
 
+// REFINE pipeline entrypoint ###############################################################
+    if (params.entrypoint == "refine") {
+        BAMTOOLS_CONVERT(ch_samplesheet)                          // Convert bam to fasta
+        GSTAMA_POLYACLEANUP(BAMTOOLS_CONVERT.out.data)            // Clean polyA tails from reads
+    }
+
+
 // MAP pipeline entrypoint ##################################################################
     if (params.entrypoint == "isoseq") {
+        ch_reads_to_map = GSTAMA_POLYACLEANUP.out.fasta
+    }
+    else if (params.entrypoint == "refine") {
         ch_reads_to_map = GSTAMA_POLYACLEANUP.out.fasta
     }
     else if (params.entrypoint == "map") {
